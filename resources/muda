@@ -42,7 +42,7 @@ local GetMouseLocation = UserInputService.GetMouseLocation
 
 -- // Silent Aim Vars
 local Aiming = {
-    Enabled = false,
+    Enabled = true,
 
     ShowFOV = false,
     FOV = 50,
