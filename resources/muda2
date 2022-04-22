@@ -1,4 +1,3 @@
--- // Dependencies
 local Aiming = loadstring(game:HttpGet("https://raw.githubusercontent.com/neverloseXsoftwork/zawarudooverheaven/main/resources/muda"))()
 Aiming.TeamCheck(false)
 
@@ -16,6 +15,7 @@ local DaHoodSettings = {
     Prediction = 0.165,
 
     SilentAim = false,
+    AutoPrediction = false,
     AimLock = false,
     AimLockKeybind = Enum.KeyCode.E,
     BeizerLock = {
@@ -28,27 +28,6 @@ local DaHoodSettings = {
     }
 }
 getgenv().DaHoodSettings = DaHoodSettings
-
--- // Overwrite to account downed
-function Aiming.Check()
-    -- // Check A
-    if not (Aiming.Enabled == true and Aiming.Selected ~= LocalPlayer and Aiming.SelectedPart ~= nil) then
-        return false
-    end
-
-    -- // Check if downed
-    local Character = Aiming.Character(Aiming.Selected)
-    local KOd = Character:WaitForChild("BodyEffects")["K.O"].Value
-    local Grabbed = Character:FindFirstChild("GRABBING_CONSTRAINT") ~= nil
-
-    -- // Check B
-    if (KOd or Grabbed) then
-        return false
-    end
-
-    -- //
-    return true
-end
 
 -- // Hook
 local __index
@@ -100,4 +79,21 @@ RunService:BindToRenderStep("AimLock", 0, function()
             CurrentCamera.CFrame = CFrame.lookAt(CurrentCamera.CFrame.Position, HitPosition)
         end
     end
+
+    while wait() do
+        if DaHoodSettings.AutoPrediction == true then
+            local pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+            local split = string.split(pingvalue,'(')
+            local ping = tonumber(split[1])
+            if ping < 275 then
+                getgenv().Prediction = 0.178
+            elseif ping < 180 then
+                getgenv().Prediction = 0.171
+            elseif ping < 130 then
+                getgenv().Prediction = 0.165
+            elseif ping < 70 then
+                getgenv().Prediction = 0.157
+            end
+        end
+        end
 end)
